@@ -11,7 +11,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ParkingIcon from "@mui/icons-material/LocalParking";
 import UsersIcon from "@mui/icons-material/People";
 import ElectricScooterIcon from "@mui/icons-material/ElectricScooter";
-import { SignOutItem } from "./SignOutItem/index";
+import { SignOutItem } from "./SignOutItem";
 
 const categories = [
   {
