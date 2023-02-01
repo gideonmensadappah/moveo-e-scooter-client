@@ -1,24 +1,17 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import Navigator from "./components/SideNav";
 
 function App() {
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>moveo-e-scooter-client</p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='layout'>
+      <Navigator />
+      <MainContent />
     </div>
   );
 }
 
 export default App;
+
+const MainContent = () => {
+  return <div className='main'></div>;
+};
