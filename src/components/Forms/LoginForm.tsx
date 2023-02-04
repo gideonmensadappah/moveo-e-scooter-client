@@ -41,7 +41,7 @@ const LoginForm = () => {
           <Input autoFocus {...register("password")} />
           <CostumTypography children={errors.password?.message} />
         </FormControl>
-        <CostumButton type='submit' children={"Submit"} />
+        <CostumButton type='submit' children='Login' />
       </Stack>
     </form>
   );
