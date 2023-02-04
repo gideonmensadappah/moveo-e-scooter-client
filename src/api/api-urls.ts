@@ -1,5 +1,5 @@
 export enum URLS {
   AUTHENTICATE = "api/auth",
-  USER = "api/user",
+  USER = "api/users",
   PARKING = "api/parkings",
 }

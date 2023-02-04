@@ -5,15 +5,20 @@ import Navigator from "./components/SideNav";
 import ScootersScreen from "./screens/Scooters";
 import ParkingsScreen from "./screens/Parkings";
 import UsersScreen from "./screens/Users";
+import LoginScreen from "./screens/Login";
+import AuthContextProvider from "./contexts/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <div className='layout'>
-        <Navigator />
-        <MainContent />
-      </div>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <LoginScreen />
+        <div className='layout'>
+          <Navigator />
+          <MainContent />
+        </div>
+      </Router>
+    </AuthContextProvider>
   );
 }
 

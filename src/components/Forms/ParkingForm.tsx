@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import CostumTypography from "../Typography";
 import { Parking, Location } from "../../interfaces/Parking/parking-interface";
-import { useAppDispatch } from "../../hooks/redux/index";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { create_parking } from "../../redux/parking/parking-actions";
 
 import { formValuesMapParkingStructure } from "../../utils/formValuesMapParkingStructure";
@@ -31,7 +31,6 @@ const ParkingForm: FC<Props> = ({ handleCloseModal }) => {
   const { errors } = formState;
 
   const onSubmit: SubmitHandler<Inputs> = (formValues) => {
-    // TOD:  Add validation
     dispatch(create_parking(formValuesMapParkingStructure(formValues)));
     handleCloseModal();
   };

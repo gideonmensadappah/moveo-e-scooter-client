@@ -5,7 +5,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import CostumButton from "../Button/index";
 
 type Props = {
-  onClose: () => void;
+  onClose?: () => void;
   modalState: boolean;
   children: ReactNode;
 };

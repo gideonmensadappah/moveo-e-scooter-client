@@ -7,30 +7,40 @@ import { useForm } from "react-hook-form";
 
 import CostumButton from "../Button";
 import { User } from "../../interfaces/User/user-interface";
-import { LoginUserSchema } from "../../utils/LoginUserSchema";
+import { RegisterUserSchema } from "../../utils/RegisterUserSchema";
 import CostumTypography from "../Typography";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
-import { user_login } from "../../redux/user/user-actions";
 
 const useFormInput = {
   defaultValues: {},
-  resolver: zodResolver(LoginUserSchema),
+  resolver: zodResolver(RegisterUserSchema),
 };
 
-type Inputs = Pick<User, "email" | "password">;
-
-const LoginForm = () => {
-  const dispatch = useAppDispatch();
-
-  const { register, handleSubmit, formState } = useForm<Inputs>(useFormInput);
+const RegisterForm = () => {
+  const { register, handleSubmit, formState } = useForm<User>(useFormInput);
   const { errors } = formState;
 
-  const onSubmit = (formValues: Inputs) => {
-    dispatch(user_login(formValues));
+  const onSubmit = (formValues: User) => {
+    console.log({ formValues });
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
+        <FormControl>
+          <FormLabel>Username</FormLabel>
+          <Input autoFocus {...register("username")} />
+          <CostumTypography children={errors.username?.message} />
+        </FormControl>
+        <FormControl>
+          <FormLabel>First Name</FormLabel>
+          <Input autoFocus {...register("firstName")} />
+          <CostumTypography children={errors.firstName?.message} />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Last Name</FormLabel>
+          <Input autoFocus {...register("lastName")} />
+          <CostumTypography children={errors.lastName?.message} />
+        </FormControl>
         <FormControl>
           <FormLabel>Email</FormLabel>
           <Input autoFocus {...register("email")} />
@@ -47,4 +57,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

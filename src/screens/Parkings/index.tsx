@@ -11,7 +11,7 @@ import CostumTypography from "../../components/Typography/index";
 
 import { parkingsSelector } from "../../redux/parking/parking-selector";
 import { get_parkings } from "../../redux/parking/parking-actions";
-import { useAppDispatch } from "../../hooks/redux";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
@@ -42,7 +42,7 @@ const ParkingsScreen = () => {
     }
 
     return searchAlgo<Parking>(parkings, userText, "address");
-  }, [userText]);
+  }, [userText, parkings]);
 
   useEffect(() => {
     dispatch(get_parkings(""));
