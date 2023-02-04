@@ -3,7 +3,7 @@ import Table from "@mui/joy/Table";
 import Sheet from "@mui/joy/Sheet";
 import { Parking } from "../../interfaces/Parking/parking-interface";
 
-type Props = {
+type Props<T = {}> = {
   parkings: Array<Parking>;
 };
 
@@ -12,7 +12,6 @@ const styles = {
   position: "absolute" as any,
   left: "45%",
 };
-
 const DefaultDisplay = <div style={styles}>No parkings available...</div>;
 
 const CostumTable: FC<Props> = ({ parkings }) => {

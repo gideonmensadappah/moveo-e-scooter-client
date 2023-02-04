@@ -28,6 +28,7 @@ const LoginForm = () => {
   const onSubmit = (formValues: Inputs) => {
     dispatch(user_login(formValues));
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
@@ -38,7 +39,7 @@ const LoginForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Password</FormLabel>
-          <Input autoFocus {...register("password")} />
+          <Input type='password' autoFocus {...register("password")} />
           <CostumTypography children={errors.password?.message} />
         </FormControl>
         <CostumButton type='submit' children='Login' />

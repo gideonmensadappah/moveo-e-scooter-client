@@ -1,45 +1,41 @@
 import axios from "axios";
-import baseUrl from "./base-url";
 import { getItem } from "../utils/localStorage";
 import { Req } from "../enums/req/req.enum";
 
-let ip: string;
+const baseUrl: string = process.env.REACT_APP_SERVER_BASE_URL!;
 
-if (process.env.REACT_APP_STATE === "production") ip = baseUrl.production;
-else ip = baseUrl.development;
-
-export const POST = async <T>(url: string, body: unknown) => {
+export const POST = async <T>(path: string, body: unknown) => {
   const authHeaders = getAuthorizationHeaders();
   return await (
-    await axios.post<T>(`${ip}${url}`, body, authHeaders)
+    await axios.post<T>(`${baseUrl}${path}`, body, authHeaders)
   ).data;
 };
 
-export const PUT = async <T>(url: string, body?: unknown) => {
+export const PUT = async <T>(path: string, body?: unknown) => {
   const authHeaders = getAuthorizationHeaders();
   return await (
-    await axios.put<T>(`${ip}${url}`, body, authHeaders)
+    await axios.put<T>(`${baseUrl}${path}`, body, authHeaders)
   ).data;
 };
 
-export const GET = async <T>(url: string) => {
+export const GET = async <T>(path: string) => {
   const authHeaders = getAuthorizationHeaders();
   return await (
-    await axios.get<T>(`${ip}${url}`, authHeaders)
+    await axios.get<T>(`${baseUrl}${path}`, authHeaders)
   ).data;
 };
 
-export const PATCH = async <T>(url: string, body?: unknown) => {
+export const PATCH = async <T>(path: string, body?: unknown) => {
   const authHeaders = getAuthorizationHeaders();
   return await (
-    await axios.patch<T>(`${ip}${url}`, body, authHeaders)
+    await axios.patch<T>(`${baseUrl}${path}`, body, authHeaders)
   ).data;
 };
 
-export const DELETE = async <T>(url: string) => {
+export const DELETE = async <T>(path: string) => {
   const authHeaders = getAuthorizationHeaders();
   return await (
-    await axios.delete<T>(`${ip}${url}`, authHeaders)
+    await axios.delete<T>(`${baseUrl}${path}`, authHeaders)
   ).data;
 };
 const getAuthorizationHeaders = () => {
