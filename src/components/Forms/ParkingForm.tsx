@@ -67,7 +67,7 @@ const ParkingForm: FC<Props> = ({ handleCloseModal }) => {
         </FormControl>
       </Stack>
       <br />
-      <CostumButton type='submit' children={"Submit"} />
+      <CostumButton type='submit' children="Create" />
     </form>
   );
 };

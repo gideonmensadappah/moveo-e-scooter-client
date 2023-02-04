@@ -34,7 +34,7 @@ export const parkingSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(create_parking.fulfilled, (state, action) => {
       const parking = action.payload.data;
-      state.parkings = [parking, ...state.parkings];
+      state.parkings = [...state.parkings, parking];
       state.loading = false;
     });
     builder.addCase(create_parking.pending, (state, action) => {
