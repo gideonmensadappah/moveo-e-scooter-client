@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
-import { parkingLoadingSelector } from "../../redux/parking/parking-selector";
+import { FC } from "react";
 
 const styles = {
   position: "absolute" as any,
   left: "45%",
 };
 
-export const DefaultDisplay = () => {
-  const isLoading = useSelector(parkingLoadingSelector);
+type Props = {
+  isLoading?: boolean;
+};
+export const DefaultDisplay: FC<Props> = ({ isLoading }) => {
   return (
     <div style={styles}>
       {isLoading ? "Loading..." : "No data available..."}

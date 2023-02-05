@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ActionsArea } from "../../components/ActionsArea/index";
 import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
@@ -9,8 +10,14 @@ import CostumModal from "../../components/Modal";
 import { ParkingForm } from "../../components/Forms";
 import CostumTypography from "../../components/Typography/index";
 
-import { parkingsSelector } from "../../redux/parking/parking-selector";
-import { get_parkings } from "../../redux/parking/parking-actions";
+import {
+  parkingsSelector,
+  parkingLoadingSelector,
+} from "../../redux/parking/parking-selector";
+import {
+  get_parkings,
+  delete_parking,
+} from "../../redux/parking/parking-actions";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 import searchAlgo from "../../utils/searchAlgo";
@@ -18,18 +25,29 @@ import { debounceSearch } from "../../utils/debounceSearch";
 
 import { Parking } from "../../interfaces/Parking/parking-interface";
 
-const titles = ["addres", "number of scooters", "latitude", "longitude"];
+const titles = ["addres", "number of scooters", "latitude", "longitude", ""];
 
 const ParkingsScreen = () => {
   const dispatch = useAppDispatch();
 
   const parkings = useSelector(parkingsSelector);
-
+  const parkingIsLoading = useSelector(parkingLoadingSelector);
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    dispatch(get_parkings(""));
+  }, []);
+
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_parking(id));
+  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -46,10 +64,6 @@ const ParkingsScreen = () => {
     return searchAlgo<Parking>(parkings, userText, "address");
   }, [userText, parkings]);
 
-  useEffect(() => {
-    dispatch(get_parkings(""));
-  }, []);
-
   return (
     <ContentWrapper>
       <CostumButton onClick={handleOpen}>Add</CostumButton>
@@ -61,7 +75,10 @@ const ParkingsScreen = () => {
       </ActionsArea>
       <CostumTable>
         <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody length={parkingsList.length}>
+        <CostumTable.TableBody
+          length={parkingsList.length}
+          isLoading={parkingIsLoading}
+        >
           {parkingsList.map((row, key) => (
             <tr key={row._id}>
               <td>{key}</td>
@@ -69,6 +86,9 @@ const ParkingsScreen = () => {
               <td>{row.amountOfScootersAvailabile}</td>
               <td>{row.location?.latitude}</td>
               <td>{row.location?.longitude}</td>
+              <td>
+                <DeleteIcon onClick={handleDelete(row?._id)} />
+              </td>
             </tr>
           ))}
         </CostumTable.TableBody>

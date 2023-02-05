@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ActionsArea } from "../../components/ActionsArea/index";
 import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
@@ -14,13 +15,17 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
 import { Scooter } from "../../interfaces/Sooter/scooter-interface";
-import { scootersSelector } from "../../redux/scooter/scooter-selector";
+import {
+  scootersSelector,
+  scooterLoadingSelector,
+} from "../../redux/scooter/scooter-selector";
 import {
   get_scooters,
   get_filtered_scooters_by_active,
 } from "../../redux/scooter/scooter-actions";
 import { selectOptions } from "../../components/Forms/ScooterForm";
 import { Status } from "../../enums/scooter/scooter.enum";
+import { delete_scooter } from "../../redux/scooter/scooter-actions";
 
 const titles = [
   "latitude",
@@ -28,6 +33,7 @@ const titles = [
   "model",
   "year Of Manufacture",
   "status",
+  "",
 ];
 const defaultSelect = { label: "none", value: "none" };
 
@@ -35,6 +41,8 @@ const ScootersScreen = () => {
   const dispatch = useAppDispatch();
 
   const scooters = useSelector(scootersSelector);
+  const scootersIsLoading = useSelector(scooterLoadingSelector);
+
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -44,6 +52,13 @@ const ScootersScreen = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_scooter(id));
+  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -86,7 +101,10 @@ const ScootersScreen = () => {
       </ActionsArea>
       <CostumTable>
         <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody length={scooterList.length}>
+        <CostumTable.TableBody
+          length={scooterList.length}
+          isLoading={scootersIsLoading}
+        >
           {scooterList.map((row, key) => (
             <tr key={row._id}>
               <td>{key}</td>
@@ -97,6 +115,9 @@ const ScootersScreen = () => {
                 <>{row.yearOfManufacture}</>
               </td>
               <td>{row.status}</td>
+              <td>
+                <DeleteIcon onClick={handleDelete(row?._id)} />
+              </td>
             </tr>
           ))}
         </CostumTable.TableBody>

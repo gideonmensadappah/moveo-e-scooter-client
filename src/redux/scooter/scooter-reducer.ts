@@ -80,6 +80,19 @@ export const scooterSlice = createSlice({
         state.loading = false;
       }
     );
+    builder.addCase(delete_scooter.fulfilled, (state, action) => {
+      const scooterId = action.payload.id;
+
+      state.scooters = state.scooters.filter(({ _id }) => _id !== scooterId);
+      state.loading = false;
+    });
+    builder.addCase(delete_scooter.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(delete_scooter.rejected, (state, action) => {
+      state.error = action.error.message!;
+      state.loading = false;
+    });
   },
 });
 export const scootersAction = scooterSlice.actions;

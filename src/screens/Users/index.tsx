@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ActionsArea } from "../../components/ActionsArea/index";
 import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
@@ -13,18 +14,21 @@ import { useAppDispatch } from "../../hooks/useAppDispatch";
 import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
 
-import { get_users } from "../../redux/user/user-actions";
-import { usersSelector } from "../../redux/user/user-selector";
+import { get_users, delete_user } from "../../redux/user/user-actions";
+import {
+  usersSelector,
+  userLoadingSelector,
+} from "../../redux/user/user-selector";
 import { User } from "../../interfaces/User/user-interface";
-import ScooterForm from "../../components/Forms/ScooterForm";
 import RegisterForm from "../../components/Forms/RegisterForm";
 
-const titles = ["username", "firtname", "lastname", "email"];
+const titles = ["username", "firtname", "lastname", "email", ""];
 
 const UsersScreen = () => {
   const dispatch = useAppDispatch();
 
   const users = useSelector(usersSelector);
+  const userIsLoading = useSelector(userLoadingSelector);
 
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
@@ -35,6 +39,13 @@ const UsersScreen = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_user(id));
+  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -62,7 +73,7 @@ const UsersScreen = () => {
       </ActionsArea>
       <CostumTable>
         <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody length={users.length}>
+        <CostumTable.TableBody length={users.length} isLoading={userIsLoading}>
           {usersList.map((row, key) => (
             <tr key={row._id}>
               <td>{key}</td>
@@ -70,6 +81,9 @@ const UsersScreen = () => {
               <td>{row.firstName}</td>
               <td>{row?.lastName}</td>
               <td>{row.email}</td>
+              <td>
+                <DeleteIcon onClick={handleDelete(row?._id)} />
+              </td>
             </tr>
           ))}
         </CostumTable.TableBody>

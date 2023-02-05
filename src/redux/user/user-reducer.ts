@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/User/user-interface";
+import { delete_user } from "./user-actions";
 
 import {
   create_user,
@@ -81,6 +82,19 @@ export const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(get_users.rejected, (state, action) => {
+      state.error = action.error.message!;
+      state.loading = false;
+    });
+    builder.addCase(delete_user.fulfilled, (state, action) => {
+      const userId = action.payload.id;
+
+      state.users = state.users.filter(({ _id }) => _id !== userId);
+      state.loading = false;
+    });
+    builder.addCase(delete_user.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(delete_user.rejected, (state, action) => {
       state.error = action.error.message!;
       state.loading = false;
     });

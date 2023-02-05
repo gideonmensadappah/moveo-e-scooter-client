@@ -57,6 +57,20 @@ export const parkingSlice = createSlice({
       state.error = action.error.message!;
       state.loading = false;
     });
+
+    builder.addCase(delete_parking.fulfilled, (state, action) => {
+      const parkingId = action.payload.id;
+
+      state.parkings = state.parkings.filter(({ _id }) => _id !== parkingId);
+      state.loading = false;
+    });
+    builder.addCase(delete_parking.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(delete_parking.rejected, (state, action) => {
+      state.error = action.error.message!;
+      state.loading = false;
+    });
   },
 });
 export const parkingsAction = parkingSlice.actions;

@@ -58,7 +58,7 @@ export const delete_parking = createAsyncThunk(
 
       if (status === Req.failed) throw new Error(data as any);
 
-      return { id, unassignedparkings: data };
+      return { id, data };
     } catch (err) {
       return rejectWithValue(err);
     }

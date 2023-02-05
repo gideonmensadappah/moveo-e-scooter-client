@@ -11,7 +11,7 @@ import {
 import { Req } from "../../enums/req/req.enum";
 import { RootState } from "../store";
 import { Scooter } from "../../interfaces/Sooter/scooter-interface";
-import { Status } from '../../enums/scooter/scooter.enum';
+import { Status } from "../../enums/scooter/scooter.enum";
 
 export const get_scooters = createAsyncThunk(
   "scooter/getScooter",
@@ -103,7 +103,7 @@ export const delete_scooter = createAsyncThunk(
 
       if (status === Req.failed) throw new Error(data as any);
 
-      return { id, unassignedscooters: data };
+      return { id, data };
     } catch (err) {
       return rejectWithValue(err);
     }

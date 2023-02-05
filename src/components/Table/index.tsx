@@ -8,8 +8,9 @@ const sxStyles = { height: "60%", overflow: "auto" };
 type THeadProps = {
   titles: Array<string>;
 };
-type TBodyProps<T> = {
+type TBodyProps = {
   length: number;
+  isLoading?: boolean;
   children: ReactNode;
 };
 
@@ -25,8 +26,12 @@ const TableHead: FC<THeadProps> = ({ titles = [] }) => {
     </thead>
   );
 };
-const TableBody: FC<TBodyProps<{}>> = ({ length, children }) => {
-  return !length ? <DefaultDisplay /> : <tbody>{children}</tbody>;
+const TableBody: FC<TBodyProps> = ({ length, isLoading, children }) => {
+  return !length ? (
+    <DefaultDisplay isLoading={isLoading} />
+  ) : (
+    <tbody>{children}</tbody>
+  );
 };
 
 type Props = {
