@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-import Navigator from "./components/SideNav";
+import SideNav from "./components/SideNav";
 import ScootersScreen from "./screens/Scooters";
 import ParkingsScreen from "./screens/Parkings";
 import UsersScreen from "./screens/Users";
@@ -14,7 +14,7 @@ function App() {
       <Router>
         <LoginScreen />
         <div className='layout'>
-          <Navigator />
+          <SideNav />
           <MainContent />
         </div>
       </Router>
