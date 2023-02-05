@@ -77,7 +77,7 @@ const ScooterForm: FC<Props> = ({ handleCloseModal }) => {
             value={field.value}
             handleChange={handleSelectChange}
           />
-          <CostumTypography children={errors.yearOfManufacture?.message} />
+          <CostumTypography children={errors.status?.message} />
         </>
 
         <CostumTypography type='title'>Location</CostumTypography>
