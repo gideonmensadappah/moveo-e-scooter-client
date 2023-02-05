@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Status } from "../enums/scooter/scooter.enum";
 
 export const ScooterSchema = z.object({
   model: z.string().min(1, { message: "Must be 1 or more characters long" }),
