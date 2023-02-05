@@ -1,8 +1,8 @@
 export default function <T extends Record<any, any>>(
-  data: T[],
+  data: Array<T>,
   userText: string,
   searchKey: string
-): T[] {
+): Array<T> {
   let res: T[] = [];
   for (let i = 0; i < data.length; i++) {
     let name = data[i][searchKey];

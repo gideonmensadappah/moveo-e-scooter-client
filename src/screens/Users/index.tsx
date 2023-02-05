@@ -17,6 +17,7 @@ import { get_users } from "../../redux/user/user-actions";
 import { usersSelector } from "../../redux/user/user-selector";
 import { User } from "../../interfaces/User/user-interface";
 import ScooterForm from "../../components/Forms/ScooterForm";
+import RegisterForm from "../../components/Forms/RegisterForm";
 
 const titles = ["username", "firtname", "lastname", "email"];
 
@@ -54,7 +55,10 @@ const UsersScreen = () => {
     <ContentWrapper>
       <CostumButton onClick={handleOpen}>Add</CostumButton>
       <ActionsArea>
-        <ActionsArea.Search handleChange={handleSearchInputChange} />
+        <ActionsArea.Search
+          handleChange={handleSearchInputChange}
+          searchKey='search by username'
+        />
       </ActionsArea>
       <CostumTable>
         <CostumTable.TableHead titles={titles} />
@@ -73,7 +77,7 @@ const UsersScreen = () => {
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
-        <ScooterForm handleCloseModal={handleClose} />
+        <RegisterForm handleCloseModal={handleClose} />
       </CostumModal>
     </ContentWrapper>
   );

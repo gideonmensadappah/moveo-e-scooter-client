@@ -67,14 +67,17 @@ const ScootersScreen = () => {
       return scooters;
     }
 
-    return searchAlgo<Scooter>(scooters, userText, "");
+    return searchAlgo<Scooter>(scooters, userText, "model");
   }, [userText, scooters]);
 
   return (
     <ContentWrapper>
       <CostumButton onClick={handleOpen}>Add</CostumButton>
       <ActionsArea>
-        <ActionsArea.Search handleChange={handleSearchInputChange} />
+        <ActionsArea.Search
+          handleChange={handleSearchInputChange}
+          searchKey='search by model'
+        />
         <ActionsArea.Select
           handleChange={handleSelectChange}
           options={[defaultSelect, ...selectOptions]}

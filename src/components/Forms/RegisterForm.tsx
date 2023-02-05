@@ -1,3 +1,4 @@
+import { FC } from "react";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
@@ -9,18 +10,29 @@ import CostumButton from "../Button";
 import { User } from "../../interfaces/User/user-interface";
 import { RegisterUserSchema } from "../../utils/RegisterUserSchema";
 import CostumTypography from "../Typography";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { create_user } from "../../redux/user/user-actions";
+
+type Props = {
+  handleCloseModal: () => void;
+};
+
+type Inputs = User;
 
 const useFormInput = {
   defaultValues: {},
   resolver: zodResolver(RegisterUserSchema),
 };
 
-const RegisterForm = () => {
-  const { register, handleSubmit, formState } = useForm<User>(useFormInput);
+const RegisterForm: FC<Props> = ({ handleCloseModal }) => {
+  const dispatch = useAppDispatch();
+
+  const { register, handleSubmit, formState } = useForm<Inputs>(useFormInput);
   const { errors } = formState;
 
-  const onSubmit = (formValues: User) => {
-    console.log({ formValues });
+  const onSubmit = (formValues: Inputs) => {
+    dispatch(create_user(formValues));
+    handleCloseModal();
   };
 
   return (
@@ -48,7 +60,7 @@ const RegisterForm = () => {
         </FormControl>
         <FormControl>
           <FormLabel>Password</FormLabel>
-          <Input autoFocus {...register("password")} />
+          <Input type='password' autoFocus {...register("password")} />
           <CostumTypography children={errors.password?.message} />
         </FormControl>
         <CostumButton type='submit' children={"Submit"} />

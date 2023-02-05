@@ -17,6 +17,7 @@ import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
 
 import { Parking } from "../../interfaces/Parking/parking-interface";
+
 const titles = ["addres", "number of scooters", "latitude", "longitude"];
 
 const ParkingsScreen = () => {
@@ -53,7 +54,10 @@ const ParkingsScreen = () => {
     <ContentWrapper>
       <CostumButton onClick={handleOpen}>Add</CostumButton>
       <ActionsArea>
-        <ActionsArea.Search handleChange={handleSearchInputChange} />
+        <ActionsArea.Search
+          handleChange={handleSearchInputChange}
+          searchKey='search by address'
+        />
       </ActionsArea>
       <CostumTable>
         <CostumTable.TableHead titles={titles} />
