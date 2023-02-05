@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -28,7 +28,6 @@ const UsersScreen = () => {
   const dispatch = useAppDispatch();
 
   const users = useSelector(usersSelector);
-  const userIsLoading = useSelector(userLoadingSelector);
 
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
@@ -39,13 +38,6 @@ const UsersScreen = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
-  const handleDelete = (id: string) => () => {
-    const confirmed = window.confirm("are you sure you want to delete?");
-    if (!confirmed) return;
-
-    dispatch(delete_user(id));
-  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -71,23 +63,7 @@ const UsersScreen = () => {
           searchKey='search by username'
         />
       </ActionsArea>
-      <CostumTable>
-        <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody length={users.length} isLoading={userIsLoading}>
-          {usersList.map((row, key) => (
-            <tr key={row._id}>
-              <td>{key}</td>
-              <td>{row.username}</td>
-              <td>{row.firstName}</td>
-              <td>{row?.lastName}</td>
-              <td>{row.email}</td>
-              <td>
-                <DeleteIcon onClick={handleDelete(row?._id)} />
-              </td>
-            </tr>
-          ))}
-        </CostumTable.TableBody>
-      </CostumTable>
+      <Table users={usersList} />
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
@@ -108,3 +84,36 @@ const Info = (
     Fill in the information of the user.
   </CostumTypography>
 );
+
+const Table: FC<{ users: Array<User> }> = ({ users }) => {
+  const dispatch = useAppDispatch();
+
+  const userIsLoading = useSelector(userLoadingSelector);
+
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_user(id));
+  };
+
+  return (
+    <CostumTable>
+      <CostumTable.TableHead titles={titles} />
+      <CostumTable.TableBody length={users.length} isLoading={userIsLoading}>
+        {users.map((row, key) => (
+          <tr key={row._id}>
+            <td>{key}</td>
+            <td>{row.username}</td>
+            <td>{row.firstName}</td>
+            <td>{row?.lastName}</td>
+            <td>{row.email}</td>
+            <td>
+              <DeleteIcon onClick={handleDelete(row?._id)} />
+            </td>
+          </tr>
+        ))}
+      </CostumTable.TableBody>
+    </CostumTable>
+  );
+};

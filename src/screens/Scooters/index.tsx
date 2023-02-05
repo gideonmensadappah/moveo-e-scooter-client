@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -41,7 +41,6 @@ const ScootersScreen = () => {
   const dispatch = useAppDispatch();
 
   const scooters = useSelector(scootersSelector);
-  const scootersIsLoading = useSelector(scooterLoadingSelector);
 
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
@@ -52,13 +51,6 @@ const ScootersScreen = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
-  const handleDelete = (id: string) => () => {
-    const confirmed = window.confirm("are you sure you want to delete?");
-    if (!confirmed) return;
-
-    dispatch(delete_scooter(id));
-  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -99,29 +91,7 @@ const ScootersScreen = () => {
           value=''
         />
       </ActionsArea>
-      <CostumTable>
-        <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody
-          length={scooterList.length}
-          isLoading={scootersIsLoading}
-        >
-          {scooterList.map((row, key) => (
-            <tr key={row._id}>
-              <td>{key}</td>
-              <td>{row.currentLocation?.latitude}</td>
-              <td>{row.currentLocation?.longitude}</td>
-              <td>{row?.model}</td>
-              <td>
-                <>{row.yearOfManufacture}</>
-              </td>
-              <td>{row.status}</td>
-              <td>
-                <DeleteIcon onClick={handleDelete(row?._id)} />
-              </td>
-            </tr>
-          ))}
-        </CostumTable.TableBody>
-      </CostumTable>
+      <Table scooters={scooterList} />
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
@@ -142,3 +112,40 @@ const Info = (
     Fill in the information of the scooter.
   </CostumTypography>
 );
+
+const Table: FC<{ scooters: Array<Scooter> }> = ({ scooters }) => {
+  const dispatch = useAppDispatch();
+
+  const scootersIsLoading = useSelector(scooterLoadingSelector);
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_scooter(id));
+  };
+  return (
+    <CostumTable>
+      <CostumTable.TableHead titles={titles} />
+      <CostumTable.TableBody
+        length={scooters.length}
+        isLoading={scootersIsLoading}
+      >
+        {scooters.map((row, key) => (
+          <tr key={row._id}>
+            <td>{key}</td>
+            <td>{row.currentLocation?.latitude}</td>
+            <td>{row.currentLocation?.longitude}</td>
+            <td>{row?.model}</td>
+            <td>
+              <>{row.yearOfManufacture}</>
+            </td>
+            <td>{row.status}</td>
+            <td>
+              <DeleteIcon onClick={handleDelete(row?._id)} />
+            </td>
+          </tr>
+        ))}
+      </CostumTable.TableBody>
+    </CostumTable>
+  );
+};

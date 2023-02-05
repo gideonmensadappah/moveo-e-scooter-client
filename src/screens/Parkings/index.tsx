@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -31,7 +31,6 @@ const ParkingsScreen = () => {
   const dispatch = useAppDispatch();
 
   const parkings = useSelector(parkingsSelector);
-  const parkingIsLoading = useSelector(parkingLoadingSelector);
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -41,13 +40,6 @@ const ParkingsScreen = () => {
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-
-  const handleDelete = (id: string) => () => {
-    const confirmed = window.confirm("are you sure you want to delete?");
-    if (!confirmed) return;
-
-    dispatch(delete_parking(id));
-  };
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -73,26 +65,7 @@ const ParkingsScreen = () => {
           searchKey='search by address'
         />
       </ActionsArea>
-      <CostumTable>
-        <CostumTable.TableHead titles={titles} />
-        <CostumTable.TableBody
-          length={parkingsList.length}
-          isLoading={parkingIsLoading}
-        >
-          {parkingsList.map((row, key) => (
-            <tr key={row._id}>
-              <td>{key}</td>
-              <td>{row.address}</td>
-              <td>{row.amountOfScootersAvailabile}</td>
-              <td>{row.location?.latitude}</td>
-              <td>{row.location?.longitude}</td>
-              <td>
-                <DeleteIcon onClick={handleDelete(row?._id)} />
-              </td>
-            </tr>
-          ))}
-        </CostumTable.TableBody>
-      </CostumTable>
+      <Table parkingsList={parkingsList} />
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
@@ -113,3 +86,39 @@ const Info = (
     Fill in the information of the parking.
   </CostumTypography>
 );
+
+const Table: FC<{ parkingsList: Array<Parking> }> = ({ parkingsList }) => {
+  const dispatch = useAppDispatch();
+
+  const parkingIsLoading = useSelector(parkingLoadingSelector);
+
+  const handleDelete = (id: string) => () => {
+    const confirmed = window.confirm("are you sure you want to delete?");
+    if (!confirmed) return;
+
+    dispatch(delete_parking(id));
+  };
+
+  return (
+    <CostumTable>
+      <CostumTable.TableHead titles={titles} />
+      <CostumTable.TableBody
+        length={parkingsList.length}
+        isLoading={parkingIsLoading}
+      >
+        {parkingsList.map((row, key) => (
+          <tr key={row._id}>
+            <td>{key}</td>
+            <td>{row.address}</td>
+            <td>{row.amountOfScootersAvailabile}</td>
+            <td>{row.location?.latitude}</td>
+            <td>{row.location?.longitude}</td>
+            <td>
+              <DeleteIcon onClick={handleDelete(row?._id)} />
+            </td>
+          </tr>
+        ))}
+      </CostumTable.TableBody>
+    </CostumTable>
+  );
+};
