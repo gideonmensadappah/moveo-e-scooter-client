@@ -1,9 +1,10 @@
 import { authContext } from "../../contexts/AuthContext/index";
 import { useContext } from "react";
+import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
 
-const MainContent = () => {
+const MainScreen = () => {
   const { auth } = useContext(authContext);
-  return <div className='main'>Welcome {auth?.username ?? "User"}!</div>;
+  return <ContentWrapper>Welcome {auth?.username ?? "User"}!</ContentWrapper>;
 };
 
-export default MainContent;
+export default MainScreen;

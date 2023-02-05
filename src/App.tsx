@@ -7,6 +7,8 @@ import ParkingsScreen from "./screens/Parkings";
 import UsersScreen from "./screens/Users";
 import LoginScreen from "./screens/Login";
 import AuthContextProvider from "./contexts/AuthContext";
+import MainScreen from "./screens/Welcome/index";
+import NotFoundScreen from "./screens/NotFound";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ const MainContent = () => {
         <Route path='/users' element={<UsersScreen />} />
         <Route path='/parkings' element={<ParkingsScreen />} />
         <Route path='/scooters' element={<ScootersScreen />} />
+        <Route path='/' element={<MainScreen />} />
+        <Route path='*' element={<NotFoundScreen />} />
       </Routes>
     </div>
   );
