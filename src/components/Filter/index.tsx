@@ -5,12 +5,17 @@ import Tooltip from "@mui/material/Tooltip";
 
 type Props = {
   tooltipText?: string;
+  handleFilter: (shouldFilter: boolean) => void;
 };
 
-const Filter: FC<Props> = ({ tooltipText }) => {
+const Filter: FC<Props> = ({ tooltipText, handleFilter }) => {
   const [isFilterByStatus, setIsFilterByStatus] = useState(false);
+
   const handleFilterClick = () => {
-    setIsFilterByStatus((prev) => !prev);
+    setIsFilterByStatus((prev) => {
+      handleFilter(!prev);
+      return !prev;
+    });
   };
 
   return (

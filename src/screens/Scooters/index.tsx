@@ -6,25 +6,41 @@ import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
 import CostumButton from "../../components/Button/index";
 import CostumTable from "../../components/Table/index";
 import CostumModal from "../../components/Modal";
-import { ParkingForm } from "../../components/Forms";
+import { ScooterForm } from "../../components/Forms";
 import CostumTypography from "../../components/Typography/index";
 
-import { parkingsSelector } from "../../redux/parking/parking-selector";
-import { get_parkings } from "../../redux/parking/parking-actions";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
+import { Scooter } from "../../interfaces/Sooter/scooter-interface";
+import { scootersSelector } from "../../redux/scooter/scooter-selector";
+import {
+  get_scooters,
+  get_filtered_scooters_by_active,
+} from "../../redux/scooter/scooter-actions";
+import { selectOptions } from "../../components/Forms/ScooterForm";
+import { Status } from "../../enums/scooter/scooter.enum";
 
-import { Parking } from "../../interfaces/Parking/parking-interface";
+const titles = [
+  "latitude",
+  "longitude",
+  "model",
+  "year Of Manufacture",
+  "status",
+];
+const defaultSelect = { label: "none", value: "none" };
 
 const ScootersScreen = () => {
   const dispatch = useAppDispatch();
 
-  const parkings = useSelector(parkingsSelector);
-
+  const scooters = useSelector(scootersSelector);
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(get_scooters(""));
+  }, []);
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
@@ -36,29 +52,56 @@ const ScootersScreen = () => {
     debounceSearch(setUserText((prev) => value));
   };
 
-  const parkingsList = useMemo(() => {
-    if (!userText) {
-      return parkings;
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const status = e.target.value;
+
+    if (status === defaultSelect.value) {
+      dispatch(get_scooters(""));
+      return;
     }
 
-    return searchAlgo<Parking>(parkings, userText, "address");
-  }, [userText, parkings]);
+    dispatch(get_filtered_scooters_by_active(status as Status));
+  };
+  const scooterList = useMemo(() => {
+    if (!userText) {
+      return scooters;
+    }
 
-  useEffect(() => {
-    dispatch(get_parkings(""));
-  }, []);
+    return searchAlgo<Scooter>(scooters, userText, "");
+  }, [userText, scooters]);
 
   return (
     <ContentWrapper>
       <CostumButton onClick={handleOpen}>Add</CostumButton>
       <ActionsArea>
         <ActionsArea.Search handleChange={handleSearchInputChange} />
+        <ActionsArea.Select
+          handleChange={handleSelectChange}
+          options={[defaultSelect, ...selectOptions]}
+          value=''
+        />
       </ActionsArea>
-      <CostumTable parkings={parkingsList} />
+      <CostumTable>
+        <CostumTable.TableHead titles={titles} />
+        <CostumTable.TableBody length={scooterList.length}>
+          {scooterList.map((row, key) => (
+            <tr key={row._id}>
+              <td>{key}</td>
+              <td>{row.currentLocation?.latitude}</td>
+              <td>{row.currentLocation?.longitude}</td>
+              <td>{row?.model}</td>
+              <td>
+                <>{row.yearOfManufacture}</>
+              </td>
+              <td>{row.status}</td>
+            </tr>
+          ))}
+        </CostumTable.TableBody>
+      </CostumTable>
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
-        <ParkingForm handleCloseModal={handleClose} />
+        <ScooterForm handleCloseModal={handleClose} />
       </CostumModal>
     </ContentWrapper>
   );

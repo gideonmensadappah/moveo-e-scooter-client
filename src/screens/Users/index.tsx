@@ -6,25 +6,31 @@ import { ContentWrapper } from "../../components/Layout/ContentWrapper/index";
 import CostumButton from "../../components/Button/index";
 import CostumTable from "../../components/Table/index";
 import CostumModal from "../../components/Modal";
-import { ParkingForm } from "../../components/Forms";
 import CostumTypography from "../../components/Typography/index";
 
-import { parkingsSelector } from "../../redux/parking/parking-selector";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 
 import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
 
-import { Parking } from "../../interfaces/Parking/parking-interface";
 import { get_users } from "../../redux/user/user-actions";
+import { usersSelector } from "../../redux/user/user-selector";
+import { User } from "../../interfaces/User/user-interface";
+import ScooterForm from "../../components/Forms/ScooterForm";
+
+const titles = ["username", "firtname", "lastname", "email"];
 
 const UsersScreen = () => {
   const dispatch = useAppDispatch();
 
-  const parkings = useSelector(parkingsSelector);
+  const users = useSelector(usersSelector);
 
   const [userText, setUserText] = useState("");
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(get_users(""));
+  }, []);
 
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
@@ -36,17 +42,13 @@ const UsersScreen = () => {
     debounceSearch(setUserText((prev) => value));
   };
 
-  const parkingsList = useMemo(() => {
+  const usersList = useMemo(() => {
     if (!userText) {
-      return parkings;
+      return users;
     }
 
-    return searchAlgo<Parking>(parkings, userText, "address");
-  }, [userText, parkings]);
-
-  useEffect(() => {
-    dispatch(get_users(""));
-  }, []);
+    return searchAlgo<User>(users, userText, "username");
+  }, [userText, users]);
 
   return (
     <ContentWrapper>
@@ -54,11 +56,24 @@ const UsersScreen = () => {
       <ActionsArea>
         <ActionsArea.Search handleChange={handleSearchInputChange} />
       </ActionsArea>
-      <CostumTable parkings={parkingsList} />
+      <CostumTable>
+        <CostumTable.TableHead titles={titles} />
+        <CostumTable.TableBody length={users.length}>
+          {usersList.map((row, key) => (
+            <tr key={row._id}>
+              <td>{key}</td>
+              <td>{row.username}</td>
+              <td>{row.firstName}</td>
+              <td>{row?.lastName}</td>
+              <td>{row.email}</td>
+            </tr>
+          ))}
+        </CostumTable.TableBody>
+      </CostumTable>
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />
-        <ParkingForm handleCloseModal={handleClose} />
+        <ScooterForm handleCloseModal={handleClose} />
       </CostumModal>
     </ContentWrapper>
   );

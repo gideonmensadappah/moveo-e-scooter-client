@@ -17,6 +17,7 @@ import searchAlgo from "../../utils/searchAlgo";
 import { debounceSearch } from "../../utils/debounceSearch";
 
 import { Parking } from "../../interfaces/Parking/parking-interface";
+const titles = ["addres", "number of scooters", "latitude", "longitude"];
 
 const ParkingsScreen = () => {
   const dispatch = useAppDispatch();
@@ -54,7 +55,20 @@ const ParkingsScreen = () => {
       <ActionsArea>
         <ActionsArea.Search handleChange={handleSearchInputChange} />
       </ActionsArea>
-      <CostumTable parkings={parkingsList} />
+      <CostumTable>
+        <CostumTable.TableHead titles={titles} />
+        <CostumTable.TableBody length={parkingsList.length}>
+          {parkingsList.map((row, key) => (
+            <tr key={row._id}>
+              <td>{key}</td>
+              <td>{row.address}</td>
+              <td>{row.amountOfScootersAvailabile}</td>
+              <td>{row.location?.latitude}</td>
+              <td>{row.location?.longitude}</td>
+            </tr>
+          ))}
+        </CostumTable.TableBody>
+      </CostumTable>
       <CostumModal modalState={open} onClose={handleClose}>
         <CostumModal.Text children={HeaderText} />
         <CostumModal.Text children={Info} />

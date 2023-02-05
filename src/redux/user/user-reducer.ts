@@ -61,7 +61,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(create_user.fulfilled, (state, action) => {
       const user = action.payload.data;
-      state.users = [user, ...state.users];
+      state.users = [...state.users, user];
       state.loading = false;
     });
     builder.addCase(create_user.pending, (state, action) => {

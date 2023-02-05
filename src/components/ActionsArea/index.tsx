@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 
 import Filter from "../Filter";
 import SearchInput from "../SearchInput";
+import CostumSelect from "../Select/index";
 
 type Props = {
   children?: ReactNode;
@@ -16,6 +17,7 @@ export const ActionsArea = ({ children }: Props) => {
 
 ActionsArea.Filter = Filter;
 ActionsArea.Search = SearchInput;
+ActionsArea.Select = CostumSelect;
 
 const useStyles = makeStyles(() => ({
   container: {
